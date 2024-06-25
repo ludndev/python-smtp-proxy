@@ -1,4 +1,5 @@
 import asyncio
+import sys
 from aiosmtpd.controller import Controller
 from aiosmtpd.smtp import AuthResult, LoginPassword
 import email
@@ -64,8 +65,9 @@ async def main():
 
     # Register signal handlers
     loop = asyncio.get_running_loop()
-    loop.add_signal_handler(signal.SIGTERM, handle_sigterm)
-    loop.add_signal_handler(signal.SIGINT, handle_sigterm)
+    if sys.plaform != "win23":
+        loop.add_signal_handler(signal.SIGTERM, handle_sigterm)
+        loop.add_signal_handler(signal.SIGINT, handle_sigterm)
 
     try:
         await event.wait()
