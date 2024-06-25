@@ -9,7 +9,13 @@ msg['Subject'] = 'Test Email'
 msg['From'] = 'sender@example.com'
 msg['To'] = 'recipient@example.com'
 
-with smtplib.SMTP(config.SMTP_PROXY_HOST, config.SMTP_PROXY_PORT) as server:
-    server.send_message(msg)
-
-print("Email sent")
+try:
+    with smtplib.SMTP(config.SMTP_PROXY_HOST, config.SMTP_PROXY_PORT) as server:
+        server.send_message(msg)
+    print("Email sent")
+except ConnectionRefusedError:
+    print("Unable to connect to SMTP Server. Check if server.py is running")
+except smtplib.SMTPNotSupportedError as e:
+    print(f"SMTP Error. {e}")
+except Exception as e:
+    print(f"An exception occurred. {e}")
