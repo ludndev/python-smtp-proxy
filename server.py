@@ -1,6 +1,7 @@
 import asyncio
 from aiosmtpd.controller import Controller
 import email
+import signal
 import config
 
 
@@ -27,15 +28,29 @@ async def main():
     controller = Controller(handler, hostname=config.SMTP_PROXY_HOST, port=config.SMTP_PROXY_PORT)
     controller.start()
 
-    print('SMTP server running on localhost:1025')
+    print(f"SMTP server running on {config.SMTP_PROXY_HOST}:{config.SMTP_PROXY_PORT}")
+
+    # Create an asyncio Event to wait for shutdown signal
+    event = asyncio.Event()
+
+    def handle_sigterm():
+        print("\nReceived termination signal, shutting down...")
+        event.set()
+
+    # Register signal handlers
+    loop = asyncio.get_running_loop()
+    loop.add_signal_handler(signal.SIGTERM, handle_sigterm)
+    loop.add_signal_handler(signal.SIGINT, handle_sigterm)
 
     try:
-        await asyncio.Event().wait()
-    except KeyboardInterrupt:
-        pass
+        await event.wait()
     finally:
         controller.stop()
+        print("SMTP server stopped")
 
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except Exception as e:
+        print(f"Something went wrong. {e}")

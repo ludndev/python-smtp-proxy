@@ -4,6 +4,8 @@ A demo to proxy SMTP requests.
 
 ## Todo
 - [ ] on CTRL+C, stop server.py process
+  - [x] on Unix-type system
+  - [ ] on Windows
 - [ ] add proper loggers
 - [ ] support authentication (username & password)
 - [ ] support SSL (465) and TLS (587)
