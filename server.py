@@ -1,5 +1,6 @@
 import asyncio
 from aiosmtpd.controller import Controller
+from aiosmtpd.smtp import AuthResult, LoginPassword
 import email
 import signal
 import config
@@ -23,9 +24,33 @@ class CustomHandler:
         return '250 OK'
 
 
+def authenticator_func(server, session, envelope, mechanism, auth_data):
+    # For this simple example, we'll ignore other parameters
+    assert isinstance(auth_data, LoginPassword)
+
+    username = auth_data.login.decode()
+    password = auth_data.password.decode()
+
+    print(auth_data, password)
+
+    if config.AUTH_DB.get(username) == password:
+        print(f"auth {username}: True")
+        return AuthResult(success=True, handled=True, auth_data=auth_data)
+    else:
+        print(f"auth {username}: False")
+        return AuthResult(success=False, handled=False)
+
+
 async def main():
     handler = CustomHandler()
-    controller = Controller(handler, hostname=config.SMTP_PROXY_HOST, port=config.SMTP_PROXY_PORT)
+    controller = Controller(
+        handler, 
+        hostname=config.SMTP_PROXY_HOST, 
+        port=config.SMTP_PROXY_PORT,
+        authenticator=authenticator_func,
+        auth_required=True,
+        auth_require_tls=False # disable TLS for the moment
+    )
     controller.start()
 
     print(f"SMTP server running on {config.SMTP_PROXY_HOST}:{config.SMTP_PROXY_PORT}")
