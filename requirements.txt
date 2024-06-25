@@ -1,1 +1,1 @@
-inbox.py==0.0.6
+aiosmtpd==1.4.6
