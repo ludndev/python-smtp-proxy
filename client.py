@@ -11,6 +11,7 @@ msg.set_content("This is a test email")
 msg['Subject'] = 'Test Email'
 msg['From'] = 'sender@example.com'
 msg['To'] = 'recipient@example.com'
+msg.add_header('List-Unsubscribe', '<https://list.domain.com/unsubscribe.html?token=123456789>, <mailto:unsubscribe@domain.com?subject=unsubscribe>')
 
 try:
     with smtplib.SMTP(config.SMTP_PROXY_HOST, config.SMTP_PROXY_PORT) as server:

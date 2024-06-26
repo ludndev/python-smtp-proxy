@@ -9,7 +9,7 @@ A demo to proxy SMTP requests.
 - [ ] add proper loggers
 - [ ] support authentication (username & password)
 - [ ] support SSL (465) and TLS (587)
-- [ ] Support [RFC 2369](http://www.faqs.org/rfcs/rfc2369.html)
+- [x] Support [RFC 2369](http://www.faqs.org/rfcs/rfc2369.html)
 
 ## Usage
 
