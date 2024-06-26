@@ -65,7 +65,7 @@ async def main():
 
     # Register signal handlers
     loop = asyncio.get_running_loop()
-    if sys.plaform != "win23":
+    if sys.platform != "win32":
         loop.add_signal_handler(signal.SIGTERM, handle_sigterm)
         loop.add_signal_handler(signal.SIGINT, handle_sigterm)
 
